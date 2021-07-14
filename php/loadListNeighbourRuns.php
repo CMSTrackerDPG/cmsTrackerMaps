@@ -20,14 +20,14 @@ for($i=$startRunNumber; $i<=$endRunNumber; $i++) {
 	$newDir = str_replace($startRunNumber, $currentNumber, $startDir);
 	$newDir = str_replace($startGrpDir, $grpDir, $newDir);
 
-	if( file_exists("/data/users" . $newDir . $resourceName) ) {
+	if( file_exists("/eos/cms/store/group/tracker-cctrack/www/TrackerMapsReloaded/files/data/users" . $newDir . $resourceName) ) {
 		array_push($listOfRuns, $newDir . $resourceName);
 	}
 	else{
 		$nextYear = $currYear + 1;
 		$newDir = str_replace("Data".$currYear, "Data".$nextYear, $newDir);
 
-		if ( file_exists("/data/users" . $newDir . $resourceName) ) {
+		if ( file_exists("/eos/cms/store/group/tracker-cctrack/www/TrackerMapsReloaded/files/data/users" . $newDir . $resourceName) ) {
 			array_push($listOfRuns, $newDir . $resourceName);
 
 			// $startDir = $newDir;

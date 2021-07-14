@@ -6,10 +6,10 @@ $(document).ready(function() {
     decodeOptions(url);
 
     $('#treeContainer').fileTree({
-        root: '/data/users/event_display/',
+        root: '/eos/cms/store/group/tracker-cctrack/www/TrackerMapsReloaded/files/data/users/event_display/',
         multiFolder: false
     }, function(file) {
-        $("#runNumberInputBrowseCaller").attr("data-path", file.split("users")[1]);
+        $("#runNumberInputBrowseCaller").attr("data-path", file.split("TrackerMapsReloaded")[1]);
     });
 });
 
