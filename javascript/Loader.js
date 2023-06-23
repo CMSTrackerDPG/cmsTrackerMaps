@@ -32,6 +32,10 @@ Loader.prototype.loadCheckboxes = function() {
                         display_elem = "glyphicon-picture";
                         break;
 
+		    case "root":
+		        display_elem = "glyphicon-hand-left";
+		        break;
+
                     case "txt":
                     case "log":
                     case "out":

@@ -76,7 +76,7 @@ div[id^="inputCheckBoxPanelcheckbox"] > .row:first-child{
 }
 
 .diffCol{
-	display: none;
+	/*display: none;*/
 }
 
 .imgDiffWrapper {
@@ -110,6 +110,19 @@ div[id^="inputCheckBoxPanelcheckbox"] > .row:first-child{
 
 .extandable-tab-list-content .panel .panel-heading label{
 	padding: 0;
+}
+
+.jsroot.root_canvas {
+    cursor: pointer;
+    display: inline !important;
+}
+
+.root-plot {
+    height: 80% !important;
+}
+
+.root-plot-dif {
+    height: 100% !important;
 }
 
 .panel-body{

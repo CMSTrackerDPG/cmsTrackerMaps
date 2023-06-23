@@ -10,6 +10,7 @@ function addPanel(id, refPath, currPath){
         switch(ext) {
             case "png":
             case "html":
+            case "root":
                 layout = buildPanelWithImages(currID);
                 break;
 
@@ -74,6 +75,10 @@ function addToPanel(id, rsrc, csrc, info) {
     var refsrc  = rsrc + filename;
     var currsrc = csrc + filename;
     switch(ext){
+        case "root":
+            addRootToPanel(refsrc, currsrc, id);
+            break;
+
         case "png":
             var refFinal  = refsrc;
             var currFinal = currsrc;
@@ -111,6 +116,79 @@ function addToPanel(id, rsrc, csrc, info) {
     }
 }
 
+function addRootToPanel(refFinal, currFinal, id){
+    //Rremove useless text to id --> number only
+    var nID = id.replace(/^\D+/g, '');
+
+    //Create 3 html objects for the 3 plots
+    $('#' + id + ' .refCol').html("<div class='root-plot' id='draw-refRoot_"+nID+"'></div>");
+    $('#' + id + ' .currCol').html("<div class='root-plot' id='draw-curRoot_"+nID+"'></div>");
+    $('#' + id + ' .diffCol').append("<div class='root-plot-dif' id='draw-difRoot_"+nID+"'></div>");
+
+    //Script to include jsroot (open root files and draw them)
+    let scriptElement = document.createElement('script');
+    scriptElement.setAttribute('type', 'module');
+
+    //Script content (START)
+    scriptElement.textContent = `
+
+    //Import jsroot v7.4.0
+    import { settings } from 'https://root.cern/js/7.4.0/modules/core.mjs';
+    settings.Palette = 55; //Rainbow color palette
+    import{ openFile, draw } from 'https://root.cern/js/7.4.0/modules/main.mjs';
+
+    //File 1 = reference run
+    let file1 = await openFile("${refFinal}");
+    let canvas1 = await file1.readObject("MyT");
+    let hist1 = await draw('draw-refRoot_${nID}', canvas1, 'colz');
+
+    //File 2 = current run
+    let file2 = await openFile("${currFinal}");
+    let canvas2 = await file2.readObject("MyT");
+    let hist2 = await draw('draw-curRoot_${nID}', canvas2, 'colz');
+
+    //File 3 = difference between reference and current run = (ref - cur)
+    let canvas3 = await file2.readObject("MyT");
+
+    var arr1 = canvas1.fPrimitives.arr[1].fBins.arr;
+    var arr2 = canvas2.fPrimitives.arr[1].fBins.arr;
+    var arr3 = canvas3.fPrimitives.arr[1].fBins.arr;
+    var length = arr1.length;
+
+    for (var i = 0; i < length; i++) {
+        arr3[i].fContent = arr1[i].fContent - arr2[i].fContent;
+    }
+
+    let hist3 = await draw('draw-difRoot_${nID}', canvas3, 'colz');
+
+    //Zooming handled in frame painter now
+    let frame2 = hist2.getFramePainter();
+    let frame3 = hist3.getFramePainter();
+
+    //Keep old function to be able invoke it again
+    frame2.hist1zoomZ = frame2.zoom;
+    frame3.hist1zoom = frame3.zoom;
+
+    //Redefine zoom function of TH2 painter to make synchronous zooming of TH1 object
+    frame2.zoom = function(xmin,xmax,ymin,ymax) {
+        hist1.getFramePainter().zoom(xmin,xmax,ymin,ymax);
+        hist3.getFramePainter().zoom(xmin,xmax,ymin,ymax);
+        return this.hist1zoomZ(xmin,xmax,ymin,ymax);
+    }
+
+    frame3.zoom = function(xmin,xmax,ymin,ymax) {
+        hist1.getFramePainter().zoom(xmin,xmax,ymin,ymax);
+        return this.hist1zoom(xmin,xmax,ymin,ymax);
+    }
+
+    `;
+    //Script content (END)
+
+    document.head.appendChild(scriptElement);
+
+    attachWheelZoomListeners('#' + id);
+}
+
 function addPngToPanel(refFinal, currFinal, id, emptyMap){
     $('#' + id + ' .refCol').html("<div class='imgContainer'>\
                                            <img class='imgRef' src='"   + refFinal  + "'/>\
@@ -122,10 +200,13 @@ function addPngToPanel(refFinal, currFinal, id, emptyMap){
 
     $('#' + id + " .diffCol").append("\
                             <div  class='imgContainer '>\
-                                <div class='imgDiffWrapper imgDiff' style='background-image: url(\"" + refFinal + "\"), url(\"" + currFinal + "\")'>\
+                                <div class='imgDiffWrapper imgDiff' style='background-image: url(\"" + refFinal + "\"),
                                     <div class='cleanRef ' style='background-image: url(\"" + emptyMap + "\")'></div>\
                                 </div>\
                             </div>");
+
+    //Activated automatic show of Diff plot --> therefore hide it
+    $('#' + id + ' .diffCol').hide();
 
     attachWheelZoomListeners('#' + id);
 }

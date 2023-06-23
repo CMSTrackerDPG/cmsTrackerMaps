@@ -59,7 +59,7 @@ function buildTimelinePanel(id) {
 }
 
 function buildPanelWithImages(id) {
-    return "<div id='" + id + "' class='tab-pane fade extandable-tab-list-element'>" +
+    return "<div id='" + id + "' class='tab-pane fade extandable-tab-list-element active in'>" +
             // "<div class='row'>" + 
                 "<div class='viewType'>" +
                     "<div style='text-align: center;'>"+
@@ -144,6 +144,6 @@ function buildPanelWithText(id) {
 
 function buildTab(id,currID) {
     return "<li><a class='tab-pane' data-toggle='tab' href='#" + currID + "' id='" + currID + "lnk'>" + 
-            "<button class='close closeTab' toClose='"+id+"' type='button'>×</button>" + $('#' + id).attr('label')+
+            "<button class='close closeTab' toClose='"+id+"' type='button'>X</button>" + $('#' + id).attr('label')+
             "</a></li>";
 }
