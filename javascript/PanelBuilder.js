@@ -10,7 +10,7 @@ function addPanel(id, refPath, currPath){
         switch(ext) {
             case "png":
             case "html":
-            case "root":
+            case "jsroot":
                 layout = buildPanelWithImages(currID);
                 break;
 
@@ -75,8 +75,10 @@ function addToPanel(id, rsrc, csrc, info) {
     var refsrc  = rsrc + filename;
     var currsrc = csrc + filename;
     switch(ext){
-        case "root":
-            addRootToPanel(refsrc, currsrc, id);
+        case "jsroot":
+            var nID = id.replace(/^\D+/g, '');
+            window['plotname_' + nID] = filename.replace(ext,"");
+            addRootToPanel(refsrc, currsrc, id, info.map);
             break;
 
         case "png":
@@ -116,7 +118,7 @@ function addToPanel(id, rsrc, csrc, info) {
     }
 }
 
-function addRootToPanel(refFinal, currFinal, id){
+function addRootToPanel(refFinal, currFinal, id, emptyMap){
     //Rremove useless text to id --> number only
     var nID = id.replace(/^\D+/g, '');
 
@@ -124,6 +126,9 @@ function addRootToPanel(refFinal, currFinal, id){
     $('#' + id + ' .refCol').html("<div class='root-plot' id='draw-refRoot_"+nID+"'></div>");
     $('#' + id + ' .currCol').html("<div class='root-plot' id='draw-curRoot_"+nID+"'></div>");
     $('#' + id + ' .diffCol').append("<div class='root-plot-dif' id='draw-difRoot_"+nID+"'></div>");
+
+    //Assign the emptyMap with a given id to a global variable accessible within the script
+    window['emptyMap_' + nID] = emptyMap;
 
     //Script to include jsroot (open root files and draw them)
     let scriptElement = document.createElement('script');
@@ -137,28 +142,81 @@ function addRootToPanel(refFinal, currFinal, id){
     settings.Palette = 55; //Rainbow color palette
     import{ openFile, draw } from 'https://root.cern/js/7.4.0/modules/main.mjs';
 
-    //File 1 = reference run
-    let file1 = await openFile("${refFinal}");
-    let canvas1 = await file1.readObject("MyT");
+    let template = await openFile(emptyMap_${nID});
+
+    let canvas1 = await template.readObject("MyT");
+    var arr1 = canvas1.fPrimitives.arr[1].fBins.arr;
+    let canvas2 = await template.readObject("MyT");
+    var arr2 = canvas2.fPrimitives.arr[1].fBins.arr;
+    let canvas3 = await template.readObject("MyT");
+    var arr3 = canvas3.fPrimitives.arr[1].fBins.arr;
+
+    //Define position and text of the Title in the template .root
+    //Pixel
+    var templTit = "size";
+    var posTit = 6;
+    //Strip
+    if(emptyMap_${nID}==="img/tkMapEmpty.root"){
+        templTit="StoNCorrOnTrack";
+        posTit=2;
+    }
+
+    //Additional variables
+    var length = arr1.length;
+    var plot_name = plotname_${nID}.replace(".","");
+    var title = canvas1.fPrimitives.arr[posTit].fTitle.replace(templTit,plot_name);
+
+    //Read from text file (tagged as .jsroot)
+    let fill1 = await fetch('./filez/367337/${refFinal}')
+        .then(response => response.text())
+        .then(text => {
+            const lines = text.split('\\n');
+            lines.forEach((line, index) => {
+                const parts = line.split(' ');
+                if(parts.length===2){
+                    arr1[index].fContent = parseFloat(parts[1]);
+                }
+            });
+        })
+
+    //Extract run number
+    var run1 = getRunNumberFromString("${refFinal}");
+
+    //Apply name to root plot
+    var title1 = title.replace("367337",run1);
+    canvas1.fPrimitives.arr[posTit].fTitle = title1;
+
     let hist1 = await draw('draw-refRoot_${nID}', canvas1, 'colz');
 
-    //File 2 = current run
-    let file2 = await openFile("${currFinal}");
-    let canvas2 = await file2.readObject("MyT");
+    //Run 2
+    let fill2 = await fetch('./filez/368454/${currFinal}')
+        .then(response => response.text())
+        .then(text => {
+            const lines = text.split('\\n');
+            lines.forEach((line, index) => {
+                const parts = line.split(' ');
+                if(parts.length===2){
+                    arr2[index].fContent = parseFloat(parts[1]);
+                }
+            });
+        })
+
+    var run2 = getRunNumberFromString("${currFinal}");
+
+    var title2 = title.replace("367337",run2);
+    canvas2.fPrimitives.arr[posTit].fTitle = title2;
+
     let hist2 = await draw('draw-curRoot_${nID}', canvas2, 'colz');
 
-    //File 3 = difference between reference and current run = (ref - cur)
-    let canvas3 = await file2.readObject("MyT");
-
-    var arr1 = canvas1.fPrimitives.arr[1].fBins.arr;
-    var arr2 = canvas2.fPrimitives.arr[1].fBins.arr;
-    var arr3 = canvas3.fPrimitives.arr[1].fBins.arr;
-    var length = arr1.length;
-
+    //Diff or Run 1-2
     for (var i = 0; i < length; i++) {
         arr3[i].fContent = arr1[i].fContent - arr2[i].fContent;
     }
 
+    var title3 = title.replace("Run 367337",run1+"-"+run2);
+    canvas3.fPrimitives.arr[posTit].fTitle = title3;
+
+    let hist3 = await draw('draw-difRoot_${nID}', canvas3, 'colz');
     let hist3 = await draw('draw-difRoot_${nID}', canvas3, 'colz');
 
     //Zooming handled in frame painter now
