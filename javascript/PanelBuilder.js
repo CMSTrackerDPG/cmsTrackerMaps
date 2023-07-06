@@ -167,7 +167,7 @@ function addRootToPanel(refFinal, currFinal, id, emptyMap){
     var title = canvas1.fPrimitives.arr[posTit].fTitle.replace(templTit,plot_name);
 
     //Read from text file (tagged as .jsroot)
-    let fill1 = await fetch('./filez/367337/${refFinal}')
+    let fill1 = await fetch('${refFinal}')
         .then(response => response.text())
         .then(text => {
             const lines = text.split('\\n');
@@ -189,7 +189,7 @@ function addRootToPanel(refFinal, currFinal, id, emptyMap){
     let hist1 = await draw('draw-refRoot_${nID}', canvas1, 'colz');
 
     //Run 2
-    let fill2 = await fetch('./filez/368454/${currFinal}')
+    let fill2 = await fetch('${currFinal}')
         .then(response => response.text())
         .then(text => {
             const lines = text.split('\\n');
@@ -216,7 +216,6 @@ function addRootToPanel(refFinal, currFinal, id, emptyMap){
     var title3 = title.replace("Run 367337",run1+"-"+run2);
     canvas3.fPrimitives.arr[posTit].fTitle = title3;
 
-    let hist3 = await draw('draw-difRoot_${nID}', canvas3, 'colz');
     let hist3 = await draw('draw-difRoot_${nID}', canvas3, 'colz');
 
     //Zooming handled in frame painter now
