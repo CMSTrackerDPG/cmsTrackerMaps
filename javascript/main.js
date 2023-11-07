@@ -6,10 +6,10 @@ $(document).ready(function() {
     decodeOptions(url);
 
     $('#treeContainer').fileTree({
-        root: '/data/users/event_display/',
+        root: '/eos/cms/store/group/tracker-cctrack/www/TrackerMapsReloaded/files/data/users/event_display/',
         multiFolder: false
     }, function(file) {
-        $("#runNumberInputBrowseCaller").attr("data-path", file.split("users")[1]);
+        $("#runNumberInputBrowseCaller").attr("data-path", file.split("TrackerMapsReloaded")[1]);
     });
 });
 
@@ -17,20 +17,25 @@ $(document).ready(function() {
 // to enable sharing of links
 $(document).on('click', '#link-me', function(e) {
     var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    window.location.href = url + encodeOptions();
+    var longurl = url + encodeOptions()
+    $.get("https://tinyurl.com/api-create.php?url="+longurl, function(shorturl) {
+	$('#short-url').text(shorturl);
+	window.shorturl = shorturl;
+    });
 });
+
+function copyToClipboard() {
+    var range = document.createRange();
+    range.selectNode(document.getElementById("short-url"));
+    window.getSelection().removeAllRanges(); // clear current selection
+    window.getSelection().addRange(range); // to select text
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();// to deselect
+}
 
 $(document).on('click', "#siteNameBtn", function(e){
     $("#link-me").click();
 });
-
-// --------------------- Button handlers for linking results ---------------------
-$(document).on('click', '#send-link-me', function(e) {
-    var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    event.preventDefault();
-    var emailBody = "\n \nYou can see the issue here: \n" + url + encodeOptions();
-    window.location = 'mailto:?body=' + encodeURIComponent(emailBody);
- });
 
 // when the checkboxes for the individual resources are
 // clicked: add/remove the corresponding panel

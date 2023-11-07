@@ -18,7 +18,7 @@ for($i = $startRunNumber + $countingDirection; $countingDirection > 0 ? $i <= $l
 	$newDir = str_replace($startRunNumberStr, $runStr, $startDir);
 	$newDir = str_replace($startRunHighStr, $runHighStr, $newDir);
 
-	if( file_exists("/data/users" . $newDir) ) {
+	if( file_exists("/eos/cms/store/group/tracker-cctrack/www/TrackerMapsReloaded/files/data/users" . $newDir) ) {
 		echo $newDir;
 		return;
 	}

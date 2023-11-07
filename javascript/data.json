@@ -57,11 +57,11 @@ var mapDescriptions =
       "Clusters":
       [
         {"name" : "Total Number of Clusters",                "resource" :"num_clusters.png",             "emptyMap" : "img/pxMapEmpty.png"},
-        {"name" : "Number of Clusters On-track",             "resource" :"Tnum_clusters_ontrack.png",    "emptyMap" : "img/pxMapEmpty.png"},        
+        {"name" : "Number of Clusters On-track",             "resource" :"Tnum_clusters_ontrack.png",    "emptyMap" : "img/pxMapEmpty.png"},
         {"name" : "Cluster Size On Track",                   "resource" :"Tsize.png",                    "emptyMap" : "img/pxMapEmpty.png"},
         {"name" : "Cluster Charge On Track",                 "resource" :"Tcharge.png",                  "emptyMap" : "img/pxMapEmpty.png"},
-        {"name" : "Cluster On Track Size X",                 "resource" :"Trechitsize_x.png",            "emptyMap" : "img/pxMapEmpty.png"},
-        {"name" : "Cluster On Track Size Y",                 "resource" :"Trechitsize_y.png",            "emptyMap" : "img/pxMapEmpty.png"},
+        {"name" : "Cluster On Track Size X",                 "resource" :"Tclustersize_x.png",            "emptyMap" : "img/pxMapEmpty.png"},
+        {"name" : "Cluster On Track Size Y",                 "resource" :"Tclustersize_y.png",            "emptyMap" : "img/pxMapEmpty.png"},
         {"name" : "Inclusive Cluster Size",                  "resource" :"size.png",                     "emptyMap" : "img/pxMapEmpty.png"},
         {"name" : "Inclusive Cluster Charge",                "resource" :"charge.png",                   "emptyMap" : "img/pxMapEmpty.png"}
       ],
@@ -128,10 +128,69 @@ var mapDescriptions =
         {"name" : "MergedPCLOther Endcap R2", "resource" : "MergedPCLOther_FPix_Ring2_TBM.png", "emptyMap" : "img/emptyMergedOccupancyDeadROC_FPix_Ring2_TBM.png"},
 
       ],
-  }
+  },
+
+    "Strip_ROOT": {
+	//"Bad Modules ":
+	//[
+        //    {"name" : "Quality tests ",                                  "resource" : "QTestAlarm.jsroot",      "emptyMap" : "img/tkMapEmpty.root"},
+	//],
+
+	"Module Stats ":
+	[
+            {"name" : "Digis per module ",                                    "resource" : "NumberOfDigi.jsroot",                         "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Clusters per module ",                                 "resource" : "NumberOfCluster.jsroot",                      "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "APV shots per module ",                                "resource" : "NApvShots.jsroot",                            "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Clusters on-track per module ",                        "resource" : "NumberOfOnTrackCluster.jsroot",               "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Clusters off-track per module ",                       "resource" : "NumberOfOfffTrackCluster.jsroot",             "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Inactive hits per module ",                            "resource" : "NumberInactiveHits.jsroot",                   "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Missing hits per module ",                             "resource" : "NumberMissingHits.jsroot",                    "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Valid hits per module ",                               "resource" : "NumberValidHits.jsroot",                      "emptyMap" : "img/tkMapEmpty.root"}
+	],
+
+	"Means":
+	[
+            {"name" : "Mean value for S/N for on-track cluster corrected for the angle ",            "resource" :"StoNCorrOnTrack.jsroot",          "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Mean value for Cluster Charge per cm from Track ",                            "resource" :"ChargePerCMfromTrack.jsroot",     "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Average cluster noise on-track ",                                             "resource" :"NoiseOnTrack.jsroot",             "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Average cluster noise off-track ",                                            "resource" :"NoiseOffTrack.jsroot",            "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Average cluster width on-track ",                                             "resource" :"ClusterWidthOnTrack.jsroot",      "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Average cluster width off-track ",                                            "resource" :"ClusterWidthOffTrack.jsroot",     "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Residuals Mean ",                                                             "resource" :"ResidualsMean.jsroot",            "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Residuals RMS ",                                                              "resource" :"ResidualsRMS.jsroot",             "emptyMap" : "img/tkMapEmpty.root"}
+	],
+
+	"Misc ":
+	[
+            //{"name" : "Merged Bad components (PCL + FED Err + Cabling) ",                            "resource" :"MergedBadComponentsTkMap.jsroot", "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "FED errors per modules ",                                                     "resource" :"FractionOfBadChannels.jsroot",    "emptyMap" : "img/tkMapEmpty.root"},
+            {"name" : "Fraction of bad components per module found by the prompt calibration loop ", "resource" :"PCLBadComponents.jsroot",         "emptyMap" : "img/tkMapEmpty.root"},
+            //{"name" : "Type of bad components per module found by the prompt calibration loop ",     "resource" :"PCLBadComponents_Run_.jsroot",    "emptyMap" : "img/tkMapEmpty.root"}
+	]
+    },
+
+    "Pixel_ROOT": {
+	"Clusters ":
+	[
+            {"name" : "Total Number of Clusters ",                "resource" :"num_clusters.jsroot",             "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Number of Clusters On-track ",             "resource" :"Tnum_clusters_ontrack.jsroot",    "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Cluster Size On Track ",                   "resource" :"Tsize.jsroot",                    "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Cluster Charge On Track ",                 "resource" :"Tcharge.jsroot",                  "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Cluster On Track Size X ",                 "resource" :"Tclustersize_x.jsroot",           "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Cluster On Track Size Y ",                 "resource" :"Tclustersize_y.jsroot",           "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Inclusive Cluster Size ",                  "resource" :"size.jsroot",                     "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Inclusive Cluster Charge ",                "resource" :"charge.jsroot",                   "emptyMap" : "img/pxMapEmpty.root"}
+        ],
+
+	"Misc ":
+	[
+            {"name" : "Hits Efficiency ",                         "resource" :"Thitefficiency.jsroot",           "emptyMap" : "img/pxMapEmpty.root"},
+            //{"name" : "Missing Hits ",                            "resource" :"Tmissing.jsroot",                 "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Residual X ",                              "resource" :"Tresidual_x.jsroot",              "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Residual Y ",                              "resource" :"Tresidual_y.jsroot",              "emptyMap" : "img/pxMapEmpty.root"},
+            //{"name" : "Number of Valid Hits ",                    "resource" :"Tvalid.jsroot",                   "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Digi ADC ",                                "resource" :"adc.jsroot",                      "emptyMap" : "img/pxMapEmpty.root"},
+            {"name" : "Total Number of Digis ",                   "resource" :"num_digis.jsroot",                "emptyMap" : "img/pxMapEmpty.root"},
+	],
+    },
 }
-
-
-
-
-
