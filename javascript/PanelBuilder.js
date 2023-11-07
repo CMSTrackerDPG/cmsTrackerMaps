@@ -257,7 +257,7 @@ function addPngToPanel(refFinal, currFinal, id, emptyMap){
 
     $('#' + id + " .diffCol").append("\
                             <div  class='imgContainer '>\
-                                <div class='imgDiffWrapper imgDiff' style='background-image: url(\"" + refFinal + "\"),
+                                <div class='imgDiffWrapper imgDiff' style='background-image: url(\"" + refFinal + "\"), url(\"" + currFinal + "\")'>\
                                     <div class='cleanRef ' style='background-image: url(\"" + emptyMap + "\")'></div>\
                                 </div>\
                             </div>");
